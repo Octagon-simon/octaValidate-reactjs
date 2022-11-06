@@ -34,13 +34,13 @@ $ npm i octavalidate-reactjs
 - Import the Library
 
 ```javascript
-import octaValidate from 'octavalidate'
+import octaValidate from 'octavalidate-reactjs'
 ```
 
 - Initialize the library within your component
   
 ```javascript
-import octaValidate from 'octavalidate'
+import octaValidate from 'octavalidate-reactjs'
 
 export default function(){
     //initialize the library
@@ -51,7 +51,7 @@ export default function(){
 - Handle form submission
   
 ```javascript
-import octaValidate from 'octavalidate'
+import octaValidate from 'octavalidate-reactjs'
 
 export default function(){
     //initialize the library
@@ -71,7 +71,7 @@ export default function(){
 Now, we have to create a form tag with input elements and set the attribute **octavalidate** with a list of validation rules on the form inputs.
 
 ```javascript
-import octaValidate from 'octavalidate'
+import octaValidate from 'octavalidate-reactjs'
 
 export default function(){
     //initialize the library
