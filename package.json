@@ -1,0 +1,32 @@
+{
+  "name": "octavalidate-reactjs",
+  "version": "1.0.0",
+  "description": "This NPM package helps to validate your frontend (HTML) forms using validation rules, sophisticated regular expressions and form input attributes in React JS.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Octagon-simon/octaValidate-reactjs.git"
+  },
+  "keywords": [
+    "validate",
+    "forms",
+    "form-validator",
+    "html",
+    "regexp",
+    "validation-library",
+    "file-validator",
+    "length-validator",
+    "client-side validation library",
+    "react validation library",
+    "react-forms"
+  ],
+  "author": "Simon Ugorji",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Octagon-simon/octaValidate-reactjs/issues"
+  },
+  "homepage": "https://github.com/Octagon-simon/octaValidate-reactjs#readme"
+}
