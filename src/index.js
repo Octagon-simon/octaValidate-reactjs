@@ -1,7 +1,7 @@
 /**
- * OctaValidate React JS V1.0.0
+ * OctaValidate React JS V1.0.1
  * author: Simon Ugorji
- * Last Edit : 6th November 2022
+ * Last Edit : 7th November 2022
  */
 
 (function () {
@@ -33,8 +33,8 @@
         document.head.appendChild(ovStyle);
     }
 }());
-//removed eval function and optimized the code
-export default function octaValidate(form_ID, userConfig) {
+
+export function octaValidate(form_ID, userConfig) {
     ////---------------
 
     /** STORAGE AREA **/
@@ -57,7 +57,7 @@ export default function octaValidate(form_ID, userConfig) {
         strictWords: ["undefined"]
     };
     //version number
-    const versionNumber = "1.0.0";
+    const versionNumber = "1.0.1";
 
     ////---------------
 
@@ -75,7 +75,7 @@ export default function octaValidate(form_ID, userConfig) {
 
     //function to replace eval() according to reviews from socket.io
     //this function evaluates a string as an anonymous function
-    const runExp = (exp) => Function('return '+exp)()
+    const runExp = (exp) => Function('return ' + exp)()
 
     //insert error
     const ovNewError = (inputID, error) => {
@@ -210,11 +210,11 @@ export default function octaValidate(form_ID, userConfig) {
             (userConfig.strictMode == true || userConfig.strictMode == false) ? config.strictMode = userConfig.strictMode : null;
         }
         if (userConfig.strictWords !== undefined && userConfig.strictMode !== undefined) {
-            if(userConfig.strictMode && userConfig.strictWords.length !== 0) {
+            if (userConfig.strictMode && userConfig.strictWords.length !== 0) {
                 //merge both arrays but remove duplicates
-                config.strictWords = [... new Set([... config.strictWords, ... userConfig.strictWords])]
+                config.strictWords = [... new Set([...config.strictWords, ...userConfig.strictWords])]
                 //admin, undefined, null, NaN
-            } 
+            }
         }
     }
 
@@ -599,12 +599,35 @@ export default function octaValidate(form_ID, userConfig) {
     //store custom rules
     let customRules = [];
     //add single rule
+    /**
+     * Use this method to build a single custom rule for your form
+     * 
+     * ```js
+     * const myForm = new octaValidate('my_form')
+     * myForm.customRule('PASS', /12345/, "Password must be 12345")
+     * ``` 
+     * 
+    * @param rule_title The TITLE for your validation rule. This title must not be an inbuilt validation rule!
+     * 
+     * @param regExp The regular expression for your validation rule. It must not be a string. The JavaScript engine natively recognizes regular expressions
+     * 
+     * @param text The error message to display when validation fails
+     * 
+     * @returns Boolean
+     * 
+     */
     function customRule(rule_title, regExp, text) {
         //store rule
         customRules[rule_title] = [regExp, text];
         return (customRules[rule_title] !== undefined ? true : false);
     };
-    //add multiple rules
+    /**
+     * Use this method to build multiple custom rules for your form
+     * 
+    * @param rules This must be an object with your validation rule, regular expression and error text separated by a comma [Please refer to the readme file]
+     * 
+     * @returns Boolean
+     */
     function moreCustomRules(rules) {
         if (!isObject(rules)) ovDoError("The rules provided must be a valid Object! Please refer to the documentation");
 
@@ -624,7 +647,14 @@ export default function octaValidate(form_ID, userConfig) {
         return (customRules[rule_title] !== undefined ? true : false);
     };
 
-    //form validation callback 
+    /**
+     * Use this method to add callback functions that will execute when a validation test fails or when validation tests are passed
+     * 
+    * @param success This callback will execute when validation tests are passed [Please refer to the readme file]
+     * @param error This callback will execute when a validation test fails [Please refer to the readme file]
+     * 
+     * @returns void
+     */
     function validateCallBack(success, error) {
         if (typeof success === "function") {
             cbSuccess = success;
@@ -634,7 +664,15 @@ export default function octaValidate(form_ID, userConfig) {
         }
     };
 
-    //main function to validate form
+    /**
+     * Invoke this method when the form is submitted to begin validation on the form
+     * 
+     * ```js
+     * const myForm = new octaValidate('my_form')
+     * myForm.validate()
+     * ```
+     * @returns Boolean
+     */
     function validate() {
 
         const form_id = formID;
@@ -740,7 +778,7 @@ export default function octaValidate(form_ID, userConfig) {
                                 }
 
                                 //create event listener
-                                let eventAction = function() {
+                                let eventAction = function () {
                                     if (type !== "file" && type !== "checkbox" && type !== "radio") {
                                         if (this.value) {
                                             if (runExp(validationInfo) === false) {
@@ -1478,7 +1516,7 @@ export default function octaValidate(form_ID, userConfig) {
                                             (elem.value !== EqualToElem.value)) {
                                             errors[formInputId]++;
                                             validationInfo = `${(EqualToElem.value.trim() !== "" &&
-                                            (elem.value !== EqualToElem.value))}`;
+                                                (elem.value !== EqualToElem.value))}`;
                                             ovRemoveSuccess(index);
                                             ovNewError(index, validationText);
                                             if (elem.addEventListener) {
@@ -1500,8 +1538,8 @@ export default function octaValidate(form_ID, userConfig) {
             }//end of checkif validations exist
             if (Object.keys(errors).length !== 0) {
                 let res = 0;
-                for(let key in errors){
-                    res+=Number(errors[key])
+                for (let key in errors) {
+                    res += Number(errors[key])
                 }
                 if (res === 0) {
                     if (cbSuccess !== null) {
@@ -1547,11 +1585,23 @@ export default function octaValidate(form_ID, userConfig) {
             writable: false
         }
     });
-    //Set form id for public eyes
+    /**
+     * This method returns the form id attached to the instance
+     * 
+     * @returns String
+     */
     this.form = () => { return (formID) };
-    //version Number
+    /**
+     * This method returns the library's version number
+     * 
+     * @returns String
+     */
     this.version = () => { return (versionNumber) };
-    //validation status
+    /**
+     * This method returns the number of errors on the form
+     * 
+     * @returns Number
+     */
     this.status = () => {
         let res = 0;
         Object.entries(errors).forEach(e => {
@@ -1561,7 +1611,10 @@ export default function octaValidate(form_ID, userConfig) {
         })
         return res;
     };
-    //make compatible with backend errors display
+    /**
+     * This method is useful if you use thesame library for server-side form validation. Invoke this method and pass in the error object to append errors into the form
+     * 
+     */
     this.showBackendErrors = function (errorsObj = undefined) {
         if (typeof errorsObj == "undefined" || !isObject(errorsObj) || Object.keys(errorsObj).length === 0)
             ovDoError(
@@ -1603,27 +1656,27 @@ export default function octaValidate(form_ID, userConfig) {
                                 //insert after
                                 ie.after(g);
                                 //Listen to change in input value, then remove the error
-                            if (ie.addEventListener) {
-                                ie.addEventListener("change", function(){
-                                    if(this.value.trim() !== ""){
-                                        this.classList.remove("octavalidate-inp-error");
-                                        //if error text element exists
-                                        if(g){
-                                            g.remove()
+                                if (ie.addEventListener) {
+                                    ie.addEventListener("change", function () {
+                                        if (this.value.trim() !== "") {
+                                            this.classList.remove("octavalidate-inp-error");
+                                            //if error text element exists
+                                            if (g) {
+                                                g.remove()
+                                            }
                                         }
-                                    }
-                                }, { once: true });
-                            } else if (elem.attachEvent) {
-                                ie.attachEvent("change", function(){
-                                    if(this.value.trim() !== ""){
-                                        this.classList.remove("octavalidate-inp-error");
-                                        //if error text element exists
-                                        if(g){
-                                            g.remove()
+                                    }, { once: true });
+                                } else if (elem.attachEvent) {
+                                    ie.attachEvent("change", function () {
+                                        if (this.value.trim() !== "") {
+                                            this.classList.remove("octavalidate-inp-error");
+                                            //if error text element exists
+                                            if (g) {
+                                                g.remove()
+                                            }
                                         }
-                                    }
-                                });
-                            }
+                                    });
+                                }
                             }
                         });
                     })
@@ -1650,21 +1703,21 @@ export default function octaValidate(form_ID, userConfig) {
                             ie.after(g);
                             //Listen to change in input value, then remove the error
                             if (ie.addEventListener) {
-                                ie.addEventListener("change", function(){
-                                    if(this.value.trim() !== ""){
+                                ie.addEventListener("change", function () {
+                                    if (this.value.trim() !== "") {
                                         this.classList.remove("octavalidate-inp-error");
                                         //if error text element exists
-                                        if(g){
+                                        if (g) {
                                             g.remove()
                                         }
                                     }
                                 }, { once: true });
                             } else if (elem.attachEvent) {
-                                ie.attachEvent("change", function(){
-                                    if(this.value.trim() !== ""){
+                                ie.attachEvent("change", function () {
+                                    if (this.value.trim() !== "") {
                                         this.classList.remove("octavalidate-inp-error");
                                         //if error text element exists
-                                        if(g){
+                                        if (g) {
                                             g.remove()
                                         }
                                     }
@@ -1676,6 +1729,11 @@ export default function octaValidate(form_ID, userConfig) {
             }
         });
     };
+    /**
+     * This method is useful if you use thesame library for server-side form validation. Invoke this method to remove any form errors that might have been appended by the `showBackendErrors()` method
+     * 
+     * @returns nothing
+     */
     this.removeBackendErrors = function (form_id = formID) {
         if (!findElem(form_id))
             ovDoError(`A form with this id [${form_id}] does not Exist`);

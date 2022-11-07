@@ -1,11 +1,11 @@
-# Octavalidate - React JS V1.0.0
-
+# Octavalidate - React JS V1.0.1
+ 
 This NPM package helps to validate your frontend (HTML) forms using validation rules, sophisticated regular expressions and form input attributes in React JS.
 
 ## OTHER RELEASES
 
 ### Octavalidate - Native JS
-Use the Native JS release of this library to validate your frontend forms
+Use the Native JS release of this library to validate your frontend forms client-side
 
 [Visit the repository](https://github.com/Octagon-simon/octaValidate)
 
@@ -68,7 +68,9 @@ export default function(){
 ```
 - Create and return the form
 
-Now, we have to create a form tag with input elements and set the attribute **octavalidate** with a list of validation rules on the form inputs.
+Now, we have to create a form tag with input elements and set the attribute **octavalidate** with a list of validation rules on the form inputs. 
+
+> Make sure that the form element has an ID attahced to it!
 
 ```javascript
 import octaValidate from 'octavalidate-reactjs'
@@ -112,6 +114,9 @@ The return type of the `validate()` method is `Boolean`.
 - `false` means that there are validation errors
 
 ```javascript
+
+import octaValidate from 'octavalidate-reactjs'
+
 export default function(){
     //initialize the library
     const myForm = new octaValidate("form_login")
@@ -297,6 +302,7 @@ You can define a function that will execute if there are validation errors or a 
 To define a callback, invoke the method below then pass in your function as an argument.
 
 ```javascript
+import octaValidate from 'octavalidate-reactjs'
 //create new instance of the function
 const myForm = new octaValidate('form_register');
 //success callback
@@ -331,6 +337,8 @@ We have 3 configuration options:
 To use any of these options, provide it as an object and pass it as the second argument when creating an instance of octaValidate.
 
 ```javascript
+import octaValidate from 'octavalidate-reactjs'
+
 //config options
 const options = {
   successBorder : true, 
@@ -343,9 +351,11 @@ const myForm = new octaValidate('FORM_ID', options);
 
 ## REFERENCE METHODS
 
-After creating a new instance of the function, the methods below becomes available for use.
+After importing and creating a new instance of the function, the methods below becomes available for use.
 
 ```javascript
+import octaValidate from 'octavalidate-reactjs'
+
 //create instance of the function
 const myForm = new octaValidate('FORM_ID');
 ```
