@@ -1,5 +1,5 @@
 /**
- * OctaValidate React JS V1.0.1
+ * OctaValidate React JS V1.0.2
  * author: Simon Ugorji
  * Last Edit : 7th November 2022
  */
@@ -57,7 +57,7 @@ export function octaValidate(form_ID, userConfig) {
         strictWords: ["undefined"]
     };
     //version number
-    const versionNumber = "1.0.1";
+    const versionNumber = "1.0.2";
 
     ////---------------
 

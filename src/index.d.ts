@@ -7,7 +7,7 @@
  * Now make sure that the form inputs that you wish to validate have an [id] attached to them and the attribute [octavalidate] with a list of validation rules. [Please refer to the readme file]
  *
  * ```js
- * import octaValidate from 'octavalidate-reactjs'
+ * import { octaValidate } from 'octavalidate-reactjs'
  * const myForm = new octaValidate('form_register')
  * ```
  *

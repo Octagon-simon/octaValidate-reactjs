@@ -1,4 +1,4 @@
-# Octavalidate - React JS V1.0.1
+# Octavalidate - React JS V1.0.2
  
 This NPM package helps to validate your frontend (HTML) forms using validation rules, sophisticated regular expressions and form input attributes in React JS.
 
@@ -34,13 +34,13 @@ $ npm i octavalidate-reactjs
 - Import the Library
 
 ```javascript
-import octaValidate from 'octavalidate-reactjs'
+import { octaValidate } from 'octavalidate-reactjs'
 ```
 
 - Initialize the library within your component
   
 ```javascript
-import octaValidate from 'octavalidate-reactjs'
+import { octaValidate } from 'octavalidate-reactjs'
 
 export default function(){
     //initialize the library
@@ -51,7 +51,7 @@ export default function(){
 - Handle form submission
   
 ```javascript
-import octaValidate from 'octavalidate-reactjs'
+import { octaValidate } from 'octavalidate-reactjs'
 
 export default function(){
     //initialize the library
@@ -73,7 +73,7 @@ Now, we have to create a form tag with input elements and set the attribute **oc
 > Make sure that the form element has an ID attahced to it!
 
 ```javascript
-import octaValidate from 'octavalidate-reactjs'
+import { octaValidate } from 'octavalidate-reactjs'
 
 export default function(){
     //initialize the library
@@ -115,7 +115,7 @@ The return type of the `validate()` method is `Boolean`.
 
 ```javascript
 
-import octaValidate from 'octavalidate-reactjs'
+import { octaValidate } from 'octavalidate-reactjs'
 
 export default function(){
     //initialize the library
@@ -302,7 +302,7 @@ You can define a function that will execute if there are validation errors or a 
 To define a callback, invoke the method below then pass in your function as an argument.
 
 ```javascript
-import octaValidate from 'octavalidate-reactjs'
+import { octaValidate } from 'octavalidate-reactjs'
 //create new instance of the function
 const myForm = new octaValidate('form_register');
 //success callback
@@ -337,7 +337,7 @@ We have 3 configuration options:
 To use any of these options, provide it as an object and pass it as the second argument when creating an instance of octaValidate.
 
 ```javascript
-import octaValidate from 'octavalidate-reactjs'
+import { octaValidate } from 'octavalidate-reactjs'
 
 //config options
 const options = {
@@ -354,7 +354,7 @@ const myForm = new octaValidate('FORM_ID', options);
 After importing and creating a new instance of the function, the methods below becomes available for use.
 
 ```javascript
-import octaValidate from 'octavalidate-reactjs'
+import { octaValidate } from 'octavalidate-reactjs'
 
 //create instance of the function
 const myForm = new octaValidate('FORM_ID');
