@@ -1,4 +1,4 @@
-# Octavalidate - React JS V1.0.2
+# Octavalidate - React JS V1.0.4
  
 This NPM package helps to validate your frontend (HTML) forms using validation rules, sophisticated regular expressions and form input attributes in React JS.
 
@@ -19,6 +19,18 @@ Use the NodeJS release of this library to validate your forms server-side.
 
 [Visit the package](https://npmjs.com/package/octavalidate-nodejs)
 
+## DEMO
+
+Visit the `demo/index.jsx` file and see how you can set up this library on your react app. 
+
+If you want to preview the demo form, make sure that this package `octavalidate-reactjs` is installed in your react app, then follow the process below;
+
+- Import the component to your app.jsx
+  
+- Create a route that will render the component
+
+- Visit the route on your browser and submit your form
+
 ## DOCUMENTATION
 
 Visit the [DOCUMENTATION](https://octagon-simon.github.io/projects/octavalidate/octavalidate-with-react") to learn more about this GREAT Library!
@@ -37,49 +49,47 @@ $ npm i octavalidate-reactjs
 import { octaValidate } from 'octavalidate-reactjs'
 ```
 
-- Initialize the library within your component
-  
+- Within your component, create a function to handle form submission
+
 ```javascript
 import { octaValidate } from 'octavalidate-reactjs'
 
 export default function(){
-    //initialize the library
-    const myForm = new octaValidate("form_login")
-}
-```
-
-- Handle form submission
-  
-```javascript
-import { octaValidate } from 'octavalidate-reactjs'
-
-export default function(){
-    //initialize the library
-    const myForm = new octaValidate("form_login")
     //handle form submission
-    const handleSubmit = function (e) {         
-        //prevent reload
-        e.preventDefault();
-        //begin validation on form
-        if(myForm.validate()){
-           /** process form data here **/
-        }
+    const handleSubmit = function (e) {   
+        
     }
 ```
-- Create and return the form
 
-Now, we have to create a form tag with input elements and set the attribute **octavalidate** with a list of validation rules on the form inputs. 
-
-> Make sure that the form element has an ID attahced to it!
+Now initialize the validation library within the `handleSubmit` function
 
 ```javascript
 import { octaValidate } from 'octavalidate-reactjs'
 
 export default function(){
-    //initialize the library
-    const myForm = new octaValidate("form_login")
     //handle form submission
-    const handleSubmit = function (e) {         
+    const handleSubmit = function (e) {   
+        //initialize the library
+        const myForm = new octaValidate("form_login")   
+    }
+```
+
+> It is very important to **initialize the library within the function that handles form submission**. This will help to make the validations consistent.
+
+- Now, create and return the form
+
+  We have to create a form tag with input elements and set the attribute **octavalidate** with a list of validation rules on the form inputs. 
+
+> Make sure that the form element has an ID attached to it!
+
+```javascript
+import { octaValidate } from 'octavalidate-reactjs'
+
+export default function(){
+    //handle form submission
+    const handleSubmit = function (e) {   
+        //initialize the library
+        const myForm = new octaValidate("form_login")      
         //prevent reload
         e.preventDefault();
         //begin validation on form
@@ -118,10 +128,10 @@ The return type of the `validate()` method is `Boolean`.
 import { octaValidate } from 'octavalidate-reactjs'
 
 export default function(){
-    //initialize the library
-    const myForm = new octaValidate("form_login")
     //handle form submission
-    const handleSubmit = function (e) {         
+    const handleSubmit = function (e) {
+        //initialize the library
+        const myForm = new octaValidate("form_login")     
         //prevent reload
         e.preventDefault();
         //begin validation on form
@@ -129,11 +139,20 @@ export default function(){
             /** process form data here **/
         }
     }
-
-    ...
+    //create and return the form
+    return(
+        <form id="form_login" method="post" 
+                    noValidate onSubmit={handleSubmit}>
+            <input id="inp_email" name="email" type="email" 
+                    octavalidate="R,EMAIL" />
+            <input id="inp_pass" name="password" type="password" 
+                    octavalidate="R" minLength="8" />
+            <button type="submit">Login</button>
+        </form>
+    )
 }
 ```
-So this means that the rest of the form will be processed once it has passed the validation tests.
+So this means that the rest of the form will be processed once it has passed the validation test.
 
 ## VALIDATION RULES
 
@@ -214,27 +233,27 @@ The table below shows the default validation rules and their attibutes for a cus
 
 | Validation Rule | Description| Validation Text Attribute| 
 |-----------------|------------|-------------------------|
-| R               |Required    | ov-required:msg         |
-| EMAIL           |EMAIL       | ov-email:msg         |
-| ALPHA_ONLY      |Alphabets Only| ov-alpha-only:msg |
-| ALPHA_SPACES    |Alphabets and Spaces| ov-alpha-spaces:msg|
-| ALPHA_NUMERIC   |Alphabets with Numbers| ov-alpha-numeric:msg|
-| LOWER ALPHA     |Lowercase letters | ov-lower-alpha:msg|
-| UPPER_ALPHA     |Uppercase letters | ov-upper-alpha:msg|
-| PWD             |Password          | ov-pwd:msg|
-| DIGITS          |Digits            | ov-digits:msg |
-| URL             |URL               | ov-url:msg |
-| URL_QP          |URL with Query Parameters| ov-url-qp:msg |   
-| DATE_MDY        |Date in the format MM/DD/YYYY| ov-date-mdy:msg|
-| USERNAME        |Username          | ov-username:msg |
-| TEXT            |General Text      | ov-text:msg |
+| R               |Required    | ov-required-msg         |
+| EMAIL           |EMAIL       | ov-email-msg         |
+| ALPHA_ONLY      |Alphabets Only| ov-alpha-only-msg |
+| ALPHA_SPACES    |Alphabets and Spaces| ov-alpha-spaces-msg|
+| ALPHA_NUMERIC   |Alphabets with Numbers| ov-alpha-numeric-msg|
+| LOWER ALPHA     |Lowercase letters | ov-lower-alpha-msg|
+| UPPER_ALPHA     |Uppercase letters | ov-upper-alpha-msg|
+| PWD             |Password          | ov-pwd-msg|
+| DIGITS          |Digits            | ov-digits-msg |
+| URL             |URL               | ov-url-msg |
+| URL_QP          |URL with Query Parameters| ov-url-qp-msg |   
+| DATE_MDY        |Date in the format MM/DD/YYYY| ov-date-mdy-msg|
+| USERNAME        |Username          | ov-username-msg |
+| TEXT            |General Text      | ov-text-msg |
 
 Here's how to use the custom error message
 
 ```html
-<input type="text" octavalidate="R,USERNAME" ov-required:msg="Your username is required" ov-username:msg="Username should contain letters or numbers" name="username" id="inp_uname">
+<input type="text" octavalidate="R,USERNAME" ov-required-msg="Your username is required" ov-username-msg="Username should contain letters or numbers" name="username" id="inp_uname">
 ```
->The `R` validation rule validates a CHECKBOX, FILE INPUT ELEMENT, or a TEXT input by marking them as **required fields** and you may provide a custom validation error text using the attribute `ov-required:msg`.
+>The `R` validation rule validates a CHECKBOX, FILE INPUT ELEMENT, or a TEXT input by marking them as **required fields** and you may provide a custom validation error text using the attribute `ov-required-msg`.
 
 ## ATTRIBUTES VALIDATION
 
@@ -266,9 +285,9 @@ You can validate: `maxlength, minlength and length` by providing it as an attrib
 You can check if two inputs contain the same values, using the attribute `equalto` on the input element, with a value containing the ID of the other input element to check against.
 
 ```html
-<input type="password" id="inp_pwd1" octavalidate="R,PWD" ov-required:msg="Your Password is required">
+<input type="password" id="inp_pwd1" octavalidate="R,PWD" ov-required-msg="Your Password is required">
 <!--check if both values match -->
-<input type="password" id="inp_pwd2" equalto="inp_pwd1" ov-equalto:msg="Both passwords do not match">
+<input type="password" id="inp_pwd2" equalto="inp_pwd1" ov-equalto-msg="Both passwords do not match">
 ```
 ### FILE VALIDATION
 
