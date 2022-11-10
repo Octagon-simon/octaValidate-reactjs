@@ -1,4 +1,4 @@
-# Octavalidate - React JS V1.0.4
+# Octavalidate - React JS V1.0.7
  
 This NPM package helps to validate your frontend (HTML) forms using validation rules, sophisticated regular expressions and form input attributes in React JS.
 
@@ -33,7 +33,7 @@ If you want to preview the demo form, make sure that this package `octavalidate-
 
 ## DOCUMENTATION
 
-Visit the [DOCUMENTATION](https://octagon-simon.github.io/projects/octavalidate/octavalidate-with-react") to learn more about this GREAT Library!
+Visit the [DOCUMENTATION](https://octagon-simon.github.io/projects/octavalidate/reactjs/index.html) to learn more about this GREAT Library!
 
 ## How to Use
 
@@ -299,7 +299,7 @@ You can validate: `accept, accept-mime, size, minsize, maxsize` by providing it 
 - minsize (5MB) `single or multiple` - This means that the file provided must be up to 5MB or more.
 - maxsize (5MB) `single or multiple` - This means that the file provided must be 5MB or less.
   
-Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/file.html) to learn more about file validation.
+Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/reactjs/file.html) to learn more about file validation.
 
 ## API METHODS
 
@@ -401,7 +401,7 @@ const myForm = new octaValidate('FORM_ID');
 
     Invoke this method, providing your success callback or error callback as arguments. The success callback will execute when there are no validation errors and the error callback will execute when there are validation errors
   
-> There are more methods than the ones listed above, Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/api.html) to learn more.
+> There are more methods than the ones listed above, Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/reactjs/api.html) to learn more.
 
 ## SCREENSHOTS
 
@@ -427,3 +427,5 @@ const myForm = new octaValidate('FORM_ID');
 ## Contributors
 
 [Simon Ugorji](https://twitter.com/ugorji_simon)
+
+[Chamberlain Ezigbo](https://twitter.com/chamberlin5050)
