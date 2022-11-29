@@ -20,7 +20,7 @@
  *     if( myForm.validate() ){
  *         //process form data here
  *     }
-  }
+}
  * ```
  * 
  * @param form_id The form element ID. Make sure that the form element has an ID attached to it.

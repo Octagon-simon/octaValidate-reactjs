@@ -1,7 +1,7 @@
 /**
  * OctaValidate React JS V1.2.0
  * author: Simon Ugorji
- * Last Edit : 30th November 2022
+ * Last Edit : 29th November 2022
  */
 
 (function () {
