@@ -1,6 +1,6 @@
-# Octavalidate - React JS V1.0.7
+# Octavalidate - React JS V1.2.0
  
-This NPM package helps to validate your frontend (HTML) forms using validation rules, sophisticated regular expressions and form input attributes in React JS.
+This NPM package helps to validate your frontend forms using validation rules, sophisticated regular expressions and form input attributes in React JS.
 
 ## OTHER RELEASES
 
@@ -37,7 +37,7 @@ Visit the [DOCUMENTATION](https://octagon-simon.github.io/projects/octavalidate/
 
 ## How to Use
 
-- Download the Library
+- Install the Library
 
 ```
 $ npm i octavalidate-reactjs
@@ -257,12 +257,12 @@ Here's how to use the custom error message
 
 ## ATTRIBUTES VALIDATION
 
-Currently we have 3 categories of attribute validation:
+Currently we have 4 attributes validation:
 
 - length validation
 - EqualTo validation
 - File validation
-  
+- Range validation
 ### LENGTH VALIDATION
 
 You can validate: `maxlength, minlength and length` by providing it as an attribute to the form input.
@@ -299,7 +299,15 @@ You can validate: `accept, accept-mime, size, minsize, maxsize` by providing it 
 - minsize (5MB) `single or multiple` - This means that the file provided must be up to 5MB or more.
 - maxsize (5MB) `single or multiple` - This means that the file provided must be 5MB or less.
   
-Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/reactjs/file.html) to learn more about file validation.
+Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/file.html) to learn more about file validation.
+
+### RANGE VALIDATION
+
+You can validate a range of numbers using this attribute. Say I want a user to provide a number between 1 to 5, I will set up the validation like this on my input element
+
+```html
+<input type="text" id="inp_range" range="1 - 5">
+```
 
 ## API METHODS
 
@@ -341,7 +349,7 @@ If there are no validation errors, `successCB` will be executed but if there are
 
 ## CONFIGURATION
 
-We have 3 configuration options:
+We have 4 configuration options:
 
 - successBorder: <code>Boolean</code>
   
@@ -353,16 +361,21 @@ We have 3 configuration options:
   
    This option alows you to provide words that users are not supposed to submit. For eg ["null", "error", "false", "fake", "admin"]. In order to use this option, you must set `strictMode` to `true`.
 
+- errorElem: <code>Object</code>
+  
+  This option makes the library to append the error message right after the element provided
+
 To use any of these options, provide it as an object and pass it as the second argument when creating an instance of octaValidate.
 
 ```javascript
-import { octaValidate } from 'octavalidate-reactjs'
-
 //config options
 const options = {
   successBorder : true, 
   strictMode : true, 
-  strictWords : ["error", "false", "invalid", "fake", "admin"]
+  strictWords : ["error", "false", "invalid", "fake", "admin"],
+  errorElem : {
+    "INPUT_ID" : "INPUT_ID_WRAPPER"
+  }
 }
 //my function instance
 const myForm = new octaValidate('FORM_ID', options);

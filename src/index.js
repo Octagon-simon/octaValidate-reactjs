@@ -1,10 +1,10 @@
 /**
- * OctaValidate React JS V1.0.7
+ * OctaValidate React JS V1.2.0
  * author: Simon Ugorji
- * Last Edit : 10th November 2022
+ * Last Edit : 30th November 2022
  */
 
- (function () {
+(function () {
     //global Styling
     if (!document.querySelector('#octavalidate-global-style')) {
         const ovStyle = document.createElement("style");
@@ -34,7 +34,27 @@
     }
 }());
 
-export function octaValidate(form_ID, userConfig) {
+/**
+     * Use this Library to validate your HTML forms before submission.
+     * The snippet below shows how you can create a **validation instance** for the form in order to prepare it for validation.
+     * 
+     * ```js
+     * const myForm = new octaValidate('form_ID', userConfig)
+     * ``` 
+     * 
+     * @param form_ID The **ID** of the form you are trying to validate
+     * 
+     * @param userConfig The **configuration options** to apply to the validation Instance
+     * 
+     * @returns Object
+     * 
+ */
+export function octaValidate(form_ID, userConfig = {
+    errorElem : {},
+    strictMode : false,
+    strictWords : [],
+    successBorder : true
+}) {
     ////---------------
 
     /** STORAGE AREA **/
@@ -54,10 +74,11 @@ export function octaValidate(form_ID, userConfig) {
     const config = {
         successBorder: true,
         strictMode: false,
-        strictWords: ["undefined"]
+        strictWords: ["undefined"],
+        errorElem : {}
     };
     //version number
-    const versionNumber = "1.0.7";
+    const versionNumber = "1.2.0";
 
     ////---------------
 
@@ -77,23 +98,70 @@ export function octaValidate(form_ID, userConfig) {
     //this function evaluates a string as an anonymous function
     const runExp = (exp) => Function('return ' + exp)()
 
+    ////---------------
+
+    /** PARAMETERS CHECK **/
+    //check if form id is present
+    if (typeof form_ID === "undefined"){
+        ovDoError("A valid Form Id must be passed as the first Argument during initialization");
+    }
+        
+    //check if userConfig exists and is passed as an object
+    if (typeof userConfig !== "undefined" && !isObject(userConfig))
+        ovDoError("Configuration options must be passed as a valid object");
+    //store configuration
+    if (typeof userConfig !== "undefined") {
+        if (userConfig.successBorder !== undefined) {
+            (userConfig.successBorder == true || userConfig.successBorder == false) ? config.successBorder = userConfig.successBorder : null;
+        }
+        if (userConfig.errorElem !== undefined && isObject(userConfig.errorElem) && Object.keys(userConfig.errorElem).length) {
+            config.errorElem = userConfig.errorElem
+        }
+        if (userConfig.strictMode !== undefined) {
+            (userConfig.strictMode == true || userConfig.strictMode == false) ? config.strictMode = userConfig.strictMode : null;
+        }
+        if (userConfig.strictWords !== undefined && userConfig.strictMode !== undefined) {
+            if (userConfig.strictMode && userConfig.strictWords.length !== 0) {
+                //merge both arrays but remove duplicates
+                config.strictWords = [... new Set([...config.strictWords, ...userConfig.strictWords])]
+                //admin, undefined, null, NaN
+            }
+        }
+    }
+
+    ////---------------
+
     //insert error
     const ovNewError = (inputID, error) => {
         //remove previous error
         ovRemoveError(inputID);
-        //add error to element
+        //create error element
         const g = document.createElement("p");
         g.setAttribute("id", "octavalidate_" + inputID);
         g.setAttribute("class", "octavalidate-txt-error");
         g.innerText = error;
 
-        //set class of input error
+        //find element and check if classlist contains an invalid field error
         const f = document.querySelector('#' + formID + " #" + inputID);
         if (!f.classList.contains('octavalidate-inp-error')) {
             f.classList.add("octavalidate-inp-error");
         }
-        //append to form .nextSibling
-        f.parentNode.appendChild(g, f);
+        //check if user provided a custom element to append error after
+        if(isObject(config.errorElem) && typeof config.errorElem[inputID] !== "undefined"){
+            //element to append error after
+            const elem = document.querySelector('#' + formID + " #" + config.errorElem[inputID]);
+            //append only if the element exists
+            if(elem){
+                elem.after(g)
+            }else{
+                //append error element after the input
+                f.parentNode.appendChild(g, f);
+            }
+        }else{
+            //append error element after the input
+            f.parentNode.appendChild(g, f);
+        }
+        
     };
     //remove error
     const ovRemoveError = (inputID) => {
@@ -143,7 +211,6 @@ export function octaValidate(form_ID, userConfig) {
     };
     //throw an error / exception
     const ovDoError = function (err) {
-        
         if (!findElem('octavalidate-exception')) {
             const errEl = document.createElement('p');
             errEl.id = "octavalidate-exception";
@@ -193,36 +260,6 @@ export function octaValidate(form_ID, userConfig) {
                 return (0);
         }
     };
-
-    ////---------------
-
-    /** PARAMETERS CHECK **/
-    //check if form id is present
-    if (typeof form_ID === "undefined"){
-        ovDoError("A valid Form Id must be passed as the first Argument during initialization");
-    }
-        
-    //check if userConfig exists and is passed as an object
-    if (typeof userConfig !== "undefined" && !isObject(userConfig))
-        ovDoError("Configuration options must be passed as a valid object");
-    //store configuratiion
-    if (typeof userConfig !== "undefined") {
-        if (userConfig.successBorder !== undefined) {
-            (userConfig.successBorder == true || userConfig.successBorder == false) ? config.successBorder = userConfig.successBorder : null;
-        }
-        if (userConfig.strictMode !== undefined) {
-            (userConfig.strictMode == true || userConfig.strictMode == false) ? config.strictMode = userConfig.strictMode : null;
-        }
-        if (userConfig.strictWords !== undefined && userConfig.strictMode !== undefined) {
-            if (userConfig.strictMode && userConfig.strictWords.length !== 0) {
-                //merge both arrays but remove duplicates
-                config.strictWords = [... new Set([...config.strictWords, ...userConfig.strictWords])]
-                //admin, undefined, null, NaN
-            }
-        }
-    }
-
-    ////---------------
 
     /** CORE VALIDATION LIBRARY**/
     let octaValidations = (function () {
@@ -373,7 +410,10 @@ export function octaValidate(form_ID, userConfig) {
         const ovAccept = document.querySelectorAll(`#${form_id} [accept]`);
         //get accept Mime
         const ovAcceptMime = document.querySelectorAll(`#${form_id} [accept-mime]`);
-        //collect primary validations [octavalidate] attribute
+        //get range
+        const ovRange = document.querySelectorAll(`#${form_id} [range]`);
+
+        //collect validations in [octavalidate] attribute
         if (ovPrimaryValidations) {
             let e = 0;
             while (e < ovPrimaryValidations.length) {
@@ -385,7 +425,7 @@ export function octaValidate(form_ID, userConfig) {
                 const type = (ovPrimaryValidations[e].getAttribute("type")) ? ovPrimaryValidations[e].getAttribute("type") : null;
                 //exit if attribute existts but id is null
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [octavalidate] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //["R", "required"], ["EMAIL", "email"], ["R", "radio"]
                 validatePrimary[id] = (validatePrimary[id] === undefined) ? [attrVal, type] : [...validatePrimary[id], attrVal, type];
@@ -401,13 +441,12 @@ export function octaValidate(form_ID, userConfig) {
                 const id = ovMinLengths[e].id;
                 //exit if attribute existts but id is null
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [minlength] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 validateAttr[id] = (validateAttr[id] === undefined) ? ['MINLENGTH:' + val] : [...validateAttr[id], 'MINLENGTH:' + val];
                 ++e;
             }
         }
-
         //collect all maxlength inputs
         if (ovMaxLengths) {
             let e = 0;
@@ -416,13 +455,12 @@ export function octaValidate(form_ID, userConfig) {
                 const id = ovMaxLengths[e].id;
                 //exit if attribute existts but id is null
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [maxlength] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 validateAttr[id] = (validateAttr[id] === undefined) ? ['MAXLENGTH:' + val] : [...validateAttr[id], 'MAXLENGTH:' + val];
                 ++e;
             }
         }
-
         //collect all length inputs
         if (ovLengths) {
             let e = 0;
@@ -430,13 +468,12 @@ export function octaValidate(form_ID, userConfig) {
                 let val = (ovLengths[e].getAttribute("length")) ? Number(ovLengths[e].getAttribute("length")) : ovDoError('You must provide a value for the "length" attribute');;
                 let id = ovLengths[e].id;
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [length] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 validateAttr[id] = (validateAttr[id] === undefined) ? ['LENGTH:' + val] : [...validateAttr[id], 'LENGTH:' + val];
                 ++e;
             }
         }
-
         //collect equalto
         if (ovEqualTo) {
             let e = 0;
@@ -444,7 +481,7 @@ export function octaValidate(form_ID, userConfig) {
                 const id = ovEqualTo[e].id;
                 const val = (ovEqualTo[e].getAttribute('equalto')) ? ovEqualTo[e].getAttribute('equalto') : ovDoError('You must provide a form input ID on the "equalto" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [equalto] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 if (ovEqualTo[e].type === "file")
                     ovDoError(`In order to use the "equalto" attribute, this form input ${id} must not be of type "file"`);
@@ -453,7 +490,6 @@ export function octaValidate(form_ID, userConfig) {
                 ++e;
             }
         }
-
         //collect size for file upload
         if (ovSize) {
             let e = 0;
@@ -461,7 +497,7 @@ export function octaValidate(form_ID, userConfig) {
                 const id = ovSize[e].id;
                 const val = (ovSize[e].getAttribute('size')) ? ovSize[e].getAttribute('size') : ovDoError('You must provide a valid digital storage on the "size" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [size] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //check if type is file
                 if (ovSize[e].type !== "file")
@@ -470,7 +506,6 @@ export function octaValidate(form_ID, userConfig) {
                 ++e;
             }
         }
-
         //collect min-size for file upload
         if (ovMinSize) {
             let e = 0;
@@ -478,7 +513,7 @@ export function octaValidate(form_ID, userConfig) {
                 let id = ovMinSize[e].id;
                 let val = (ovMinSize[e].getAttribute('minsize')) ? ovMinSize[e].getAttribute('minsize') : ovDoError('You must provide a valid digital storage on the "minsize" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [minsize] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //check if type is file
                 if (ovMinSize[e].type !== "file")
@@ -487,7 +522,6 @@ export function octaValidate(form_ID, userConfig) {
                 ++e;
             }
         }
-
         //collect max-size for file upload
         if (ovMaxSize) {
             let e = 0;
@@ -495,7 +529,7 @@ export function octaValidate(form_ID, userConfig) {
                 let id = ovMaxSize[e].id;
                 let val = (ovMaxSize[e].getAttribute('maxsize')) ? ovMaxSize[e].getAttribute('maxsize') : ovDoError('You must provide a valid digital storage on the "maxsize" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [maxsize] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //check if type is file
                 if (ovMaxSize[e].type !== "file")
@@ -504,7 +538,6 @@ export function octaValidate(form_ID, userConfig) {
                 ++e;
             }
         }
-
         //collect total files allowed for upload
         if (ovFiles) {
             let e = 0;
@@ -512,7 +545,7 @@ export function octaValidate(form_ID, userConfig) {
                 let id = ovFiles[e].id;
                 let val = (ovFiles[e].getAttribute('files')) ? Number(ovFiles[e].getAttribute('files')) : ovDoError('You must provide the number of files to be selected on the "files" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [files] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //check if multiple attribute is present
                 if (!(ovFiles[e].multiple))
@@ -524,7 +557,6 @@ export function octaValidate(form_ID, userConfig) {
                 ++e;
             }
         }
-
         //collect minimum files allowed for upload
         if (ovMinFiles) {
             let e = 0;
@@ -532,7 +564,7 @@ export function octaValidate(form_ID, userConfig) {
                 let id = ovMinFiles[e].id;
                 let val = (ovMinFiles[e].getAttribute('minfiles')) ? Number(ovMinFiles[e].getAttribute('minfiles')) : ovDoError('You must provide the minimum files to be selected on the "minfiles" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [minfiles] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //check if multiple attribute is present
                 if (!(ovMinFiles[e].multiple))
@@ -544,7 +576,6 @@ export function octaValidate(form_ID, userConfig) {
                 ++e;
             }
         }
-
         //collect maximum files allowed for upload
         if (ovMaxFiles) {
             let e = 0;
@@ -552,7 +583,7 @@ export function octaValidate(form_ID, userConfig) {
                 let id = ovMaxFiles[e].id;
                 let val = (ovMaxFiles[e].getAttribute('maxfiles')) ? Number(ovMaxFiles[e].getAttribute('maxfiles')) : ovDoError('You must provide the maximum files to be selected on the "maxfiles" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [maxfiles] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //check if multiple attribute is present
                 if (!(ovMaxFiles[e].multiple))
@@ -564,7 +595,6 @@ export function octaValidate(form_ID, userConfig) {
                 ++e;
             }
         }
-
         //collect accepted file extensions
         if (ovAccept) {
             let e = 0;
@@ -572,7 +602,7 @@ export function octaValidate(form_ID, userConfig) {
                 let id = ovAccept[e].id;
                 let val = (ovAccept[e].getAttribute('accept')) ? ovAccept[e].getAttribute('accept') : ovDoError('You must provide the file extensions to be matched against on the "accept" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [accept] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //check if type is file
                 if (ovAccept[e].type !== "file")
@@ -581,7 +611,6 @@ export function octaValidate(form_ID, userConfig) {
                 ++e;
             }
         }
-
         //collect accepted file MIME types
         if (ovAcceptMime) {
             let e = 0;
@@ -589,12 +618,28 @@ export function octaValidate(form_ID, userConfig) {
                 let id = ovAcceptMime[e].id;
                 let val = (ovAcceptMime[e].getAttribute('accept-mime')) ? ovAcceptMime[e].getAttribute('accept-mime') : ovDoError('You must provide the file MIME types to be matched against on the "accept-mime" attribute');
                 if (!id) {
-                    ovDoError(`One or more fields in ${form_id} does not have an id [Identifier] attached to it.`);
+                    ovDoError(`A field with the [accept-mime] attribute in ${form_id} does not have an id [Identifier] attached to it.`);
                 }
                 //check if type is file
                 if (ovAcceptMime[e].type !== "file")
                     ovDoError(`In order to use the "accept-mime" attribute, this form input ${id} must be of type "file"`);
                 validateAttr[id] = (validateAttr[id] === undefined) ? ['ACCEPT-MIME:' + val] : [...validateAttr[id], 'ACCEPT-MIME:' + val];
+                ++e;
+            }
+        }
+        //collect accepted file MIME types
+        if (ovRange) {
+            let e = 0;
+            while (e < ovRange.length) {
+                let id = ovRange[e].id;
+                let val = (ovRange[e].getAttribute('range')) ? ovRange[e].getAttribute('range') : ovDoError('You must provide a range of numbers to validate');
+                if (!id) {
+                    ovDoError(`A field with the [range] attribute does not have an id [Identifier] attached to it.`);
+                }
+                //check if type is number
+                if (ovRange[e].type !== "number")
+                    ovDoError(`In order to use the "range" attribute, this form input [${id}] must be of type "number"`);
+                validateAttr[id] = (validateAttr[id] === undefined) ? ['RANGE:' + val] : [...validateAttr[id], 'RANGE:' + val];
                 ++e;
             }
         }
@@ -682,13 +727,13 @@ export function octaValidate(form_ID, userConfig) {
         const form_id = formID;
 
         //check if form id exists in DOM
-        if (!findElem(form_id)) ovDoError(`A form with this ID [${form_id}] does not exist in the Browser DOM`);
+        if (!findElem(form_id)) ovDoError(`A form with this ID [${form_id}] does not exist in the DOM`);
         //Begin validation and return result
         return (function validateForm() {
             if (validatePrimary !== null ||
                 validateAttr !== null) {
                 //loop through all form elements that needs validation
-                let formInputs = document.querySelectorAll(`#${form_id} [octavalidate], [length], [maxlength], [minlength], [equalto], [size], [maxsize], [minsize], [accept], [accept-mime], [files], [minfiles], [maxfiles]`);
+                let formInputs = document.querySelectorAll(`#${form_id} [octavalidate], [length], [maxlength], [minlength], [equalto], [size], [maxsize], [minsize], [accept], [accept-mime], [files], [minfiles], [maxfiles], [range]`);
                 formInputs.forEach(input => {
                     //check if id exists within the element
                     if (input.id !== "") {
@@ -710,7 +755,7 @@ export function octaValidate(form_ID, userConfig) {
                             }
                             //set strict words
                             let strictWords = config.strictWords;
-                            if (elem.type !== "file" && elem.type !== "checkbox" && elem.type !== "radio") {
+                            if (elem.type !== "file" && elem.type !== "checkbox" && elem.type !== "radio" && elem.tagName != "SELECT") {
                                 //remove whitespace
                                 elem.value = elem.value.trim();
                             }
@@ -1530,6 +1575,32 @@ export function octaValidate(form_ID, userConfig) {
                                             }
                                             continueValidation[formInputId] = 0;
                                         } else {
+                                            ovRemoveError(index);
+                                        }
+                                    } else if (f.split(':')[0] === 'RANGE' && type == "number") {
+                                        const range =  f.split(':')[1].replaceAll(' ','').split('-');
+                                        const min = Number(range[0]);
+                                        const max = Number(range[1]);
+                                        
+                                        validationText = (elem.getAttribute('ov-range-msg')) ? elem.getAttribute('ov-range-msg').toString() : `Number must be within the range of ${f.split(':')[1]}`;
+
+                                        if (elem.value.trim() !== "" && ( (Number(elem.value) < min) || Number(elem.value) > max)) {
+                                            errors[formInputId]++;
+                                            validationInfo = `${elem.value.trim() !== "" && ( (Number(elem.value) < min) || Number(elem.value) > max)}`;
+                                            ovRemoveSuccess(index);
+                                            // consuming too much memory because of the action of event listeners
+                                            // ovNewError(index, validationText);
+                                            // if (elem.addEventListener) {
+                                            //     elem.addEventListener("change", attributesEventAction);
+                                            // } else if (elem.attachEvent) {
+                                            //     elem.attachEvent("change", attributesEventAction);
+                                            // }
+                                            errors[formInputId]++;
+                                            ovNewError(index, validationText);
+                                            continueValidation[formInputId] = 0;
+                                        } else {
+                                            errors[formInputId]--;
+                                            ovNewSuccess(index);
                                             ovRemoveError(index);
                                         }
                                     }

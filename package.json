@@ -1,7 +1,7 @@
 {
   "name": "octavalidate-reactjs",
-  "version": "1.0.7",
-  "description": "This NPM package helps to validate your frontend (HTML) forms using validation rules, sophisticated regular expressions and form input attributes in React JS.",
+  "version": "1.2.0",
+  "description": "This NPM package helps to validate your frontend forms using validation rules, sophisticated regular expressions and form input attributes in React JS.",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,7 +21,9 @@
     "length-validator",
     "client-side validation library",
     "react validation library",
-    "react-forms"
+    "react-forms",
+    "react js",
+    "react validation form"
   ],
   "author": "Simon Ugorji",
   "license": "MIT",
