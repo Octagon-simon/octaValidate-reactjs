@@ -1,4 +1,4 @@
-# Octavalidate - React JS V1.2.0
+# Octavalidate - React JS V1.2.2
  
 This NPM package helps to validate your frontend forms using validation rules, sophisticated regular expressions and form input attributes in React JS.
 
@@ -299,7 +299,7 @@ You can validate: `accept, accept-mime, size, minsize, maxsize` by providing it 
 - minsize (5MB) `single or multiple` - This means that the file provided must be up to 5MB or more.
 - maxsize (5MB) `single or multiple` - This means that the file provided must be 5MB or less.
   
-Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/file.html) to learn more about file validation.
+Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/reactjs/file.html) to learn more about file validation.
 
 ### RANGE VALIDATION
 
@@ -349,11 +349,8 @@ If there are no validation errors, `successCB` will be executed but if there are
 
 ## CONFIGURATION
 
-We have 4 configuration options:
+We have 3 configuration options:
 
-- successBorder: <code>Boolean</code>
-  
-  This option sets a green border on the input element if its validation is successful. Default value is `true`.
 - strictMode: <code>Boolean</code>
   
   This option removes extra white space from the start and at the end of a form input and also prevents the user from providing reserved keywords as values. Default value is `false`.
@@ -370,7 +367,6 @@ To use any of these options, provide it as an object and pass it as the second a
 ```javascript
 //config options
 const options = {
-  successBorder : true, 
   strictMode : true, 
   strictWords : ["error", "false", "invalid", "fake", "admin"],
   errorElem : {
@@ -416,16 +412,6 @@ const myForm = new octaValidate('FORM_ID');
   
 > There are more methods than the ones listed above, Please refer to the [documentation](https://octagon-simon.github.io/projects/octavalidate/reactjs/api.html) to learn more.
 
-## SCREENSHOTS
-
-<div align="center">
-    <img src="https://octagon-simon.github.io/octaValidate/img/form-error.png" width="200px">
-    <img src="https://octagon-simon.github.io/octaValidate/img/form-success.png" width="200px">
-    <img src="https://octagon-simon.github.io/octaValidate/img/contact-page.png" width="200px">
-    <img src="https://octagon-simon.github.io/octaValidate/img/file-1.png" width="200px">
-    <img src="https://octagon-simon.github.io/octaValidate/img/file-2.png" width="200px">
-    <img src="https://octagon-simon.github.io/octaValidate/img/strict-1.png" width="200px">
-</div>
 
 ## Author
 
